@@ -11,6 +11,7 @@ abstract class OpenAlexRemoteDataSource {
   Future<Map<String, dynamic>> getAuthorById(String id);
 }
 
+//lorem ipsum...
 class OpenAlexRemoteDataSourceImpl implements OpenAlexRemoteDataSource {
   final ApiClient apiClient;
 
@@ -28,9 +29,12 @@ class OpenAlexRemoteDataSourceImpl implements OpenAlexRemoteDataSource {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> results = response.data['results'] as List<dynamic>? ?? [];
+      final List<dynamic> results =
+          response.data['results'] as List<dynamic>? ?? [];
       return results
-          .map((json) => PublicationModel.fromJson(json as Map<String, dynamic>))
+          .map(
+            (json) => PublicationModel.fromJson(json as Map<String, dynamic>),
+          )
           .toList();
     } else {
       throw Exception('Failed to search publications');
@@ -41,14 +45,12 @@ class OpenAlexRemoteDataSourceImpl implements OpenAlexRemoteDataSource {
   Future<Map<int, int>> getPublicationsTrend(String keyword) async {
     final response = await apiClient.get(
       '/works',
-      queryParameters: {
-        'search': keyword,
-        'group_by': 'publication_year',
-      },
+      queryParameters: {'search': keyword, 'group_by': 'publication_year'},
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> groups = response.data['group_by'] as List<dynamic>? ?? [];
+      final List<dynamic> groups =
+          response.data['group_by'] as List<dynamic>? ?? [];
       final Map<int, int> trends = {};
       for (var group in groups) {
         final yearStr = group['key']?.toString();
@@ -89,7 +91,8 @@ class OpenAlexRemoteDataSourceImpl implements OpenAlexRemoteDataSource {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> groups = response.data['group_by'] as List<dynamic>? ?? [];
+      final List<dynamic> groups =
+          response.data['group_by'] as List<dynamic>? ?? [];
       return groups.map((g) => Map<String, dynamic>.from(g as Map)).toList();
     } else {
       throw Exception('Failed to get top journals');
@@ -100,14 +103,12 @@ class OpenAlexRemoteDataSourceImpl implements OpenAlexRemoteDataSource {
   Future<List<Map<String, dynamic>>> getTopAuthors(String keyword) async {
     final response = await apiClient.get(
       '/works',
-      queryParameters: {
-        'search': keyword,
-        'group_by': 'authorships.author.id',
-      },
+      queryParameters: {'search': keyword, 'group_by': 'authorships.author.id'},
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> groups = response.data['group_by'] as List<dynamic>? ?? [];
+      final List<dynamic> groups =
+          response.data['group_by'] as List<dynamic>? ?? [];
       return groups.map((g) => Map<String, dynamic>.from(g as Map)).toList();
     } else {
       throw Exception('Failed to get top authors');
@@ -118,14 +119,12 @@ class OpenAlexRemoteDataSourceImpl implements OpenAlexRemoteDataSource {
   Future<List<Map<String, dynamic>>> getTopKeywords(String keyword) async {
     final response = await apiClient.get(
       '/works',
-      queryParameters: {
-        'search': keyword,
-        'group_by': 'topics.id',
-      },
+      queryParameters: {'search': keyword, 'group_by': 'topics.id'},
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> groups = response.data['group_by'] as List<dynamic>? ?? [];
+      final List<dynamic> groups =
+          response.data['group_by'] as List<dynamic>? ?? [];
       return groups.map((g) => Map<String, dynamic>.from(g as Map)).toList();
     } else {
       throw Exception('Failed to get top keywords');
